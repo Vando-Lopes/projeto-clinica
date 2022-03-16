@@ -5,85 +5,75 @@ import { Button, Space, Table } from 'antd'
 import Column from 'antd/lib/table/Column'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useStyles } from "./admin.styles.ts"
-import { EditOfferModal } from "../../components/EditOfferModal/EditOfferModal"
-import { NewOfferModal } from "../../components/NewOfferModal/NewOfferModal"
+import { EditPatientModal } from "../../components/EditPatientModal/EditPatientModal"
+import { NewPatientModal } from "../../components/NewPatientModal/NewPatientModal"
 
 const Admin = () => {
   const styles = useStyles
-  const [offers, setOffers] = useState([])
-  const [newOffer, setNewOffer] = useState({
-    marca: "",
-    modelo: "",
-    ano: "",
-    preco: "",
-    cor: "",
-    km: "",
-    placa: "",
-    cidade: "",
-    data: "",
-    views: 0
+  const [patient, setPatient] = useState([])
+  const [newPatient, setNewPatient] = useState({
+    name: "",
+    dateBirth: "",
+    gender: "",
+    addres: "",
+    cpf: "",
+    status: true,
   })
-  const [editOffer, setEditOffer] = useState({})
-  const [editOfferModalVisible, setEditOfferModalVisible] = useState(false);
-  const [newOfferModalVisible, setNewOfferModalVisible] = useState(false);
+  const [editPatient, setEditPatient] = useState({})
+  const [editPatientModalVisible, setEditPatientModalVisible] = useState(false);
+  const [newPatientModalVisible, setNewPatientModalVisible] = useState(false);
 
   const peopleCollectionRef = collection(db, "pessoas")
 
-  const deleteOffer = async (id) => {
-    const offerDoc = doc(db, "carros", id)
-    await deleteDoc(offerDoc)
-    getOffers()
+  const deletePatient = async (id) => {
+    const patientDoc = doc(db, "pessoas", id)
+    await deleteDoc(patientDoc)
+    getPatient()
   }
 
   useEffect(() => {
 
-    const getOffers = async () => {
+    const getPatient = async () => {
       const data = await getDocs(peopleCollectionRef)
-      setOffers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      setPatient(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     }
-    getOffers()
-    console.log(offers)
+    getPatient()
   }, [])
 
-  useEffect(() => {
-
-    console.log(offers)
-  }, [offers])
-
-  const getOffers = async () => {
+  const getPatient = async () => {
     const data = await getDocs(peopleCollectionRef)
-    setOffers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    setPatient(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
   }
 
-  const showEditOfferModal = () => {
-    setEditOfferModalVisible(true);
+  const showEditPatientModal = () => {
+    setEditPatientModalVisible(true);
   };
 
-  const showNewOfferModal = () => {
-    setNewOfferModalVisible(true);
+  const showNewPatientModal = () => {
+    setNewPatientModalVisible(true);
   };
 
-  const setEditOfferModal = (id) => {
-    let obj = offers.find((offer) => offer.id === id)
-    setEditOffer(obj)
+  const setEditPatientModal = (id) => {
+    let obj = patient.find((patient) => patient.id === id)
+    setEditPatient(obj)
   }
 
   const handleOkEditModal = () => {
-    getOffers()
-    setEditOfferModalVisible(false);
+    getPatient()
+    setEditPatientModalVisible(false);
   };
 
   const handleCancelEditModal = () => {
-    setEditOfferModalVisible(false);
+    setEditPatientModalVisible(false);
   };
 
   const handleOkNewModal = () => {
-    getOffers()
-    setNewOfferModalVisible(false);
+    getPatient()
+    setNewPatientModalVisible(false);
   };
 
   const handleCancelNewModal = () => {
-    setNewOfferModalVisible(false);
+    setNewPatientModalVisible(false);
   };
 
 
@@ -92,7 +82,7 @@ const Admin = () => {
       <div style={styles.wrapper}>
         <h2>Pacientes</h2>
         <Button
-          onClick={showNewOfferModal}
+          onClick={showNewPatientModal}
           type="primary"
           style={{
             marginBottom: 16,
@@ -100,32 +90,32 @@ const Admin = () => {
         >
           Novo Paciente
         </Button>
-        <Table dataSource={offers} bordered>
+        <Table dataSource={patient} bordered>
           <Column title="Nome" dataIndex="name" key="name" />
-          <Column title="Data de Nascimento" dataIndex="date-birth" key="date-birth" type="date" />
+          <Column title="Data de Nascimento" dataIndex="dateBirth" key="dateBirth" type="date" />
           <Column title="Gênero" dataIndex="gender" key="gender" />
           <Column title="Endereço" dataIndex="addres" key="addres" />
           <Column title="CPF" dataIndex="cpf" key="cpf" />
           <Column title="Status" dataIndex="status" key="status" render={(text, record) => {
-            return text === true ? "Ativo" : "Inativo"
+            return text === "true" ? "Ativo" : "Inativo"
           }} />
           <Column title="Ações" key="acoes" render={(text, record) => (
             <Space size="middle">
               <Button type="primary" icon={<EditOutlined />} onClick={() => {
-                setEditOfferModal(record.id)
-                showEditOfferModal()
+                setEditPatientModal(record.id)
+                showEditPatientModal()
               }} />
               <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => {
-                deleteOffer(record.id)
+                deletePatient(record.id)
               }} />
             </Space>
           )} />
         </Table>
 
 
-        <EditOfferModal visible={editOfferModalVisible} onOk={handleOkEditModal} offer={editOffer} onCancel={handleCancelEditModal}></EditOfferModal>
+        <EditPatientModal visible={editPatientModalVisible} onOk={handleOkEditModal} patient={editPatient} onCancel={handleCancelEditModal}></EditPatientModal>
 
-        <NewOfferModal visible={newOfferModalVisible} onOk={handleOkNewModal} offer={newOffer} onCancel={handleCancelNewModal}></NewOfferModal>
+        <NewPatientModal visible={newPatientModalVisible} onOk={handleOkNewModal} patient={newPatient} onCancel={handleCancelNewModal}></NewPatientModal>
 
       </div>
 
