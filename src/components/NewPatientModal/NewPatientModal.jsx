@@ -66,7 +66,7 @@ export const NewPatientModal = (props) => {
             {/* Modal de Erro*/}
             <Modal visible={isModalVisible} onOk={handleOkAndCancelModalError} onCancel={handleOkAndCancelModalError}>
                 <h2>CPF já cadastrado</h2>
-                <p>Este CPF já foi cadastrado no sistema. </p>
+                <p>Não é possível cadastrar este paciente com este CPF, pois o CPF já foi cadastrado no sistema. </p>
             </Modal>
             {/* Modal de Novo Paciente*/}
             <Modal
