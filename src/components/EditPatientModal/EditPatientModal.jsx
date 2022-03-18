@@ -34,7 +34,7 @@ export const EditPatientModal = (props) => {
 
     const updatePatient = async (data) => {
         try {
-            if (props.patients.find((patient) => patient.cpf === data.cpf) === undefined) {
+            if (props.patients.find((patient) => patient.cpf === data.cpf && patient.id !== data.id) === undefined) {
                 const patientDoc = doc(db, "pessoas", data.id)
                 const edit = { ...data }
                 updateDoc(patientDoc, edit)
